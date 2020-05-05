@@ -72,4 +72,20 @@ describe('parse a 2D (parseJEOL)', () => {
     expect(data.data.ImRe).toHaveLength(256);
     expect(data.data.ImIm).toHaveLength(256);
   });
+
+  it('parse a COSY', () => {
+    let data = parseJEOL(readFileSync(join(dirName, cosy)));
+    expect(data.dataDimension).toStrictEqual(2);
+    expect(data.nucleus[0]).toStrictEqual('Proton');
+    expect(data.nucleus[1]).toStrictEqual('Proton');
+    expect(data.section).toStrictEqual(2);
+    expect(data.dataPoints[0]).toStrictEqual(5120);
+    expect(data.dataPoints[1]).toStrictEqual(512);
+    expect(typeof data.headers).toBe('object');
+    expect(typeof data.parameters).toBe('object');
+    expect(data.headers.dataAxisType[0]).toStrictEqual('Real_Complex');
+    expect(data.headers.dataAxisType[1]).toStrictEqual('Real_Complex');
+    expect(data.data.Re).toHaveLength(512);
+    expect(data.data.Im).toHaveLength(512);
+  });
 });

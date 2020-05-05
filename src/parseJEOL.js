@@ -1,5 +1,10 @@
 import { IOBuffer } from 'iobuffer';
 
+/**
+ * A parser for 1D and 2D JDL NMR Files
+ * @param {File} file - a file object pointing to a JDL file
+ * @return {Object} - an Object with converted data
+ */
 export function parseJEOL(file) {
   const buffer = new IOBuffer(file);
   buffer.setBigEndian();
@@ -202,9 +207,17 @@ export function parseJEOL(file) {
         for (let j = 0; j < J; j++) {
           for (let k = 0; k < me; k++) {
             if (j === 0) {
-              row[k] = getFloat64Array(buffer, me);
+              if (header.dataType === '32Bit Float') {
+                row[k] = getFloat32Array(buffer, me);
+              } else if (header.dataType === '64Bit Float') {
+                row[k] = getFloat64Array(buffer, me);
+              }
             } else {
-              row[k] = row[k].concat(getFloat64Array(buffer, me));
+              if (header.dataType === '32Bit Float') {
+                row[k] = row[k].concat(getFloat32Array(buffer, me));
+              } else if (header.dataType === '64Bit Float') {
+                row[k] = row[k].concat(getFloat64Array(buffer, me));
+              }
             }
           }
         }
@@ -228,7 +241,6 @@ export function parseJEOL(file) {
   }
 
   let digest = {
-    // nucleus: getPar(parameters, 'X_DOMAIN').value,
     dataDimension: header.dataDimensionNumber,
     nucleus: header.dataAxisTitles.slice(0, header.dataDimensionNumber),
     section: dataSectionCount,
@@ -478,6 +490,14 @@ function getFloat64Array(buffer, size) {
   let double = [];
   for (let i = 0; i < size; i++) {
     double.push(buffer.readFloat64());
+  }
+  return double;
+}
+
+function getFloat32Array(buffer, size) {
+  let double = [];
+  for (let i = 0; i < size; i++) {
+    double.push(buffer.readFloat32());
   }
   return double;
 }
