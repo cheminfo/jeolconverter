@@ -5,7 +5,7 @@
 [![Test coverage][codecov-image]][codecov-url]
 [![npm download][download-image]][download-url]
 
-read JOEL NMR files.
+read JEOL NMR files.
 
 ## Installation
 
