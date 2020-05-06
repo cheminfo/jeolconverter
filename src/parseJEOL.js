@@ -179,9 +179,14 @@ export function parseJEOL(file) {
 
   if (header.dataFormat === 'One_D') {
     for (let s = 0; s < dataSectionCount; s++) {
-      let section = getFloat64Array(buffer, header.dataPoints[0]);
-      if (s === 0) data.Re = section;
-      if (s === 1) data.Im = section;
+      let section;
+      if (header.dataType === '32Bit Float') {
+        section = getFloat32Array(buffer, header.dataPoints[0]);
+      } else if (header.dataType === '64Bit Float') {
+        section = getFloat64Array(buffer, header.dataPoints[0]);
+      }
+      if (s === 0) data.re = section;
+      if (s === 1) data.im = section;
     }
   }
 
@@ -228,22 +233,48 @@ export function parseJEOL(file) {
         }
       }
       if (dataSectionCount === 2) {
-        if (s === 0) data.Re = section;
-        if (s === 1) data.Im = section;
+        if (s === 0) data.re = section;
+        if (s === 1) data.im = section;
       }
       if (dataSectionCount === 4) {
-        if (s === 0) data.ReRe = section;
-        if (s === 1) data.ReIm = section;
-        if (s === 2) data.ImRe = section;
-        if (s === 3) data.ImIm = section;
+        if (s === 0) data.reRe = section;
+        if (s === 1) data.reIm = section;
+        if (s === 2) data.imRe = section;
+        if (s === 3) data.imIm = section;
       }
     }
   }
+  // console.log(getPar(parameters, 'X_DOMAIN').value);
+
+  let nucleus = [];
+  let acquisitionTime = [];
+  let spectralWidth = [];
+  let resolution = [];
+  let frequency = [];
+  let frequencyOffset = [];
+  if ((header.dataFormat === 'One_D') | (header.dataFormat === 'Two_D')) {
+    nucleus.push(getPar(parameters, 'X_DOMAIN').value);
+    acquisitionTime.push(getMagnitude(parameters, 'x_acq_time'));
+    spectralWidth.push(getMagnitude(parameters, 'X_SWEEP'));
+    resolution.push(getMagnitude(parameters, 'X_RESOLUTION'));
+    frequency.push(getMagnitude(parameters, 'X_FREQ'));
+    frequencyOffset.push(getMagnitude(parameters, 'X_OFFSET'));
+  }
+  if (header.dataFormat === 'Two_D') {
+    nucleus.push(getPar(parameters, 'Y_DOMAIN').value);
+    acquisitionTime.push(getMagnitude(parameters, 'y_acq_time'));
+    spectralWidth.push(getMagnitude(parameters, 'Y_SWEEP'));
+    resolution.push(getMagnitude(parameters, 'Y_RESOLUTION'));
+    frequency.push(getMagnitude(parameters, 'Y_FREQ'));
+    frequencyOffset.push(getMagnitude(parameters, 'X_OFFSET'));
+  }
+  console.log(frequencyOffset);
 
   let digest = {
     dataDimension: header.dataDimensionNumber,
-    nucleus: header.dataAxisTitles.slice(0, header.dataDimensionNumber),
-    section: dataSectionCount,
+    nucleus: nucleus,
+    nucleii: header.dataAxisTitles.slice(0, header.dataDimensionNumber),
+    dataSections: dataSectionCount,
     field: {
       magnitude: getPar(parameters, 'field_strength').value * 42.577478518,
       unit: 'MHz',
@@ -252,20 +283,18 @@ export function parseJEOL(file) {
     dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),
     experiment: getPar(parameters, 'experiment').value,
     sampleName: getPar(parameters, 'sample_id').value,
-    temperature: { magnitude: getPar(parameters, 'temp_get').value, unit: 'C' },
+    temperature: getMagnitude(parameters, 'temp_get'),
     digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
     decimationRate: getPar(parameters, 'decimation_rate').value,
-    sweepWidth: { magnitude: getPar(parameters, 'X_SWEEP').value, unit: 'Hz' },
-    sweepWidthClipped: {
-      magnitude: getPar(parameters, 'X_SWEEP_CLIPPED').value,
-      unit: 'Hz',
-    },
-    resolution: {
-      magnitude: getPar(parameters, 'X_RESOLUTION').value,
-      unit: 'Hz',
-    },
-    frequencyHz: { magnitude: getPar(parameters, 'X_FREQ').value, unit: 'Hz' },
-    offsetPpm: { magnitude: getPar(parameters, 'X_OFFSET').value, unit: 'ppm' },
+    acquisitionTime: acquisitionTime,
+    spectralWidth: spectralWidth,
+    // spectralWidthClipped: {
+    //   magnitude: getPar(parameters, 'X_SWEEP_CLIPPED').value,
+    //   unit: 'Hz',
+    // },
+    resolution: resolution,
+    frequency: frequency,
+    frequencyOffset: frequencyOffset,
     headers: header,
     parameters: parameters,
     data: data,
@@ -369,6 +398,25 @@ const prefixTable = {
   '7': 'Zepto',
 };
 
+const unitPrefixTable = {
+  Yotta: 24,
+  Exa: 21,
+  Zetta: 18,
+  Pecta: 15,
+  Tera: 12,
+  Giga: 9,
+  Mega: 6,
+  Kilo: 3,
+  None: 0,
+  Milli: -3,
+  Micro: -6,
+  Nano: -9,
+  Pico: -12,
+  Femto: -15,
+  Atto: -18,
+  Zepto: -21,
+};
+
 const baseTable = {
   0: 'None',
   1: 'Abundance',
@@ -443,6 +491,14 @@ const valueTypeTable = {
 
 function getPar(param, searchStr) {
   return param.paramArray.find((o) => o.name === searchStr);
+}
+
+function getMagnitude(param, searchStr) {
+  let par = getPar(param, searchStr);
+  let unit = par.unit[0].base;
+  let unitMult = unitPrefixTable[par.unit[0].prefix];
+  let magnitude = par.value * 10 ** unitMult;
+  return { magnitude, unit };
 }
 
 function getUnit(buffer, size) {
