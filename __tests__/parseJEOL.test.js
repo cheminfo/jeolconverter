@@ -77,7 +77,6 @@ describe('parse a 2D (parseJEOL)', () => {
 
   it('parse a COSY', () => {
     let data = parseJEOL(readFileSync(join(dirName, cosy)));
-    console.log(data);
     expect(data.dataDimension).toStrictEqual(2);
     expect(data.nucleus[0]).toStrictEqual('1H');
     expect(data.nucleus[1]).toStrictEqual('1H');
