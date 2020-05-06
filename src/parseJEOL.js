@@ -254,6 +254,7 @@ export function parseJEOL(file) {
     sampleName: getPar(parameters, 'sample_id').value,
     temperature: { magnitude: getPar(parameters, 'temp_get').value, unit: 'C' },
     digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
+    decimationRate: getPar(parameters, 'decimation_rate').value,
     sweepWidth: { magnitude: getPar(parameters, 'X_SWEEP').value, unit: 'Hz' },
     sweepWidthClipped: {
       magnitude: getPar(parameters, 'X_SWEEP_CLIPPED').value,
