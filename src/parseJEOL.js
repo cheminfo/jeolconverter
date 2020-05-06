@@ -12,56 +12,56 @@ import {
 
 /**
  * A parser for 1D and 2D JDL NMR Files
- * @param {File} file - a file object pointing to a JDL file
+ * @param {ArrayBuffer} buffer - a buffer object containing the JDL file
  * @return {Object} - an Object with converted data
  */
-export function parseJEOL(file) {
-  const buffer = new IOBuffer(file);
-  buffer.setBigEndian();
+export default function parseJEOL(buffer) {
+  let ioBuffer = new IOBuffer(buffer);
+  ioBuffer.setBigEndian();
 
   let byte;
   let header = {
-    fileIdentifier: buffer.readChars(8),
-    endian: table.endianness[buffer.readInt8()],
-    majorVersion: buffer.readUint8(),
-    minorVersion: buffer.readUint16(),
-    dataDimensionNumber: buffer.readUint8(),
+    fileIdentifier: ioBuffer.readChars(8),
+    endian: table.endianness[ioBuffer.readInt8()],
+    majorVersion: ioBuffer.readUint8(),
+    minorVersion: ioBuffer.readUint16(),
+    dataDimensionNumber: ioBuffer.readUint8(),
   };
 
-  header.dataDimensionExist = buffer
+  header.dataDimensionExist = ioBuffer
     .readByte()
     .toString(2)
     .split('')
     .map((x) => Boolean(Number(x)));
 
-  byte = buffer.readByte();
+  byte = ioBuffer.readByte();
   header.dataType = table.dataTypeTable[byte >> 6];
   header.dataFormat = table.dataFormatTable[byte & 0b00111111];
-  header.dataInstrument = table.instrumentTable[buffer.readInt8()];
-  header.translate = getArray(buffer, 8, 'readUint8');
-  header.dataAxisType = getArray(buffer, 8, 'readUint8').map(
+  header.dataInstrument = table.instrumentTable[ioBuffer.readInt8()];
+  header.translate = getArray(ioBuffer, 8, 'readUint8');
+  header.dataAxisType = getArray(ioBuffer, 8, 'readUint8').map(
     (x) => table.dataAxisTypeTable[x],
   );
 
-  header.dataUnits = getUnit(buffer, 8);
-  header.title = getString(buffer, 124);
+  header.dataUnits = getUnit(ioBuffer, 8);
+  header.title = getString(ioBuffer, 124);
 
   let byteArray = [];
-  for (byte in getArray(buffer, 4, 'readUint8')) {
+  for (byte in getArray(ioBuffer, 4, 'readUint8')) {
     byteArray.push(table.dataAxisRangedTable[byte >> 4]);
     byteArray.push(table.dataAxisRangedTable[byte & 0b00001111]);
   }
 
   header.dataAxisRanged = byteArray;
-  header.dataPoints = getArray(buffer, 8, 'readUint32');
-  header.dataOffsetStart = getArray(buffer, 8, 'readUint32');
-  header.dataOffsetStop = getArray(buffer, 8, 'readUint32');
-  header.dataAxisStart = getArray(buffer, 8, 'readFloat64');
-  header.dataAxisStop = getArray(buffer, 8, 'readFloat64');
+  header.dataPoints = getArray(ioBuffer, 8, 'readUint32');
+  header.dataOffsetStart = getArray(ioBuffer, 8, 'readUint32');
+  header.dataOffsetStop = getArray(ioBuffer, 8, 'readUint32');
+  header.dataAxisStart = getArray(ioBuffer, 8, 'readFloat64');
+  header.dataAxisStop = getArray(ioBuffer, 8, 'readFloat64');
 
   byteArray = new Uint8Array(4);
   for (let i = 0; i < 4; i++) {
-    byteArray[i] = buffer.readByte();
+    byteArray[i] = ioBuffer.readByte();
   }
   let year = 1990 + (byteArray[0] >> 1);
   let month = ((byteArray[0] << 3) & 0b00001000) + (byteArray[1] >> 5);
@@ -69,50 +69,50 @@ export function parseJEOL(file) {
   header.creationTime = { year, month, day };
 
   for (let i = 0; i < 4; i++) {
-    byteArray[i] = buffer.readByte();
+    byteArray[i] = ioBuffer.readByte();
   }
   year = 1990 + (byteArray[0] >> 1);
   month = ((byteArray[0] << 3) & 0b00001000) + (byteArray[1] >> 5);
   day = byteArray[2] & 0b00011111;
   header.revisionTime = { year, month, day };
 
-  header.nodeName = getString(buffer, 16);
-  header.site = getString(buffer, 128);
-  header.author = getString(buffer, 128);
-  header.comment = getString(buffer, 128);
+  header.nodeName = getString(ioBuffer, 16);
+  header.site = getString(ioBuffer, 128);
+  header.author = getString(ioBuffer, 128);
+  header.comment = getString(ioBuffer, 128);
 
   let dataAxisTitles = [];
   for (let i = 0; i < 8; i++) {
-    dataAxisTitles.push(getString(buffer, 32));
+    dataAxisTitles.push(getString(ioBuffer, 32));
   }
   header.dataAxisTitles = dataAxisTitles;
 
-  header.baseFreq = getArray(buffer, 8, 'readFloat64');
-  header.zeroPoint = getArray(buffer, 8, 'readFloat64');
-  header.reversed = getArray(buffer, 8, 'readBoolean');
-  buffer.skip(3);
-  header.annotationOK = Boolean(buffer.readByte() >> 7);
-  header.historyUsed = buffer.readUint32();
-  header.historyLength = buffer.readUint32();
-  header.paramStart = buffer.readUint32();
-  header.paramLength = buffer.readUint32();
-  header.ListStart = getArray(buffer, 8, 'readUint32');
-  header.ListLength = getArray(buffer, 8, 'readUint32');
-  header.dataStart = buffer.readUint32();
-  header.dataLength = (buffer.readUint32() << 32) | buffer.readUint32();
-  header.contextStart = (buffer.readUint32() << 32) | buffer.readUint32();
-  header.contextLength = buffer.readUint32();
-  header.annoteStart = (buffer.readUint32() << 32) | buffer.readUint32();
-  header.annoteLength = buffer.readUint32();
-  header.totalSize = (buffer.readUint32() << 32) | buffer.readUint32();
-  header.unitLocation = getArray(buffer, 8, 'readUint8');
+  header.baseFreq = getArray(ioBuffer, 8, 'readFloat64');
+  header.zeroPoint = getArray(ioBuffer, 8, 'readFloat64');
+  header.reversed = getArray(ioBuffer, 8, 'readBoolean');
+  ioBuffer.skip(3);
+  header.annotationOK = Boolean(ioBuffer.readByte() >> 7);
+  header.historyUsed = ioBuffer.readUint32();
+  header.historyLength = ioBuffer.readUint32();
+  header.paramStart = ioBuffer.readUint32();
+  header.paramLength = ioBuffer.readUint32();
+  header.ListStart = getArray(ioBuffer, 8, 'readUint32');
+  header.ListLength = getArray(ioBuffer, 8, 'readUint32');
+  header.dataStart = ioBuffer.readUint32();
+  header.dataLength = (ioBuffer.readUint32() << 32) | ioBuffer.readUint32();
+  header.contextStart = (ioBuffer.readUint32() << 32) | ioBuffer.readUint32();
+  header.contextLength = ioBuffer.readUint32();
+  header.annoteStart = (ioBuffer.readUint32() << 32) | ioBuffer.readUint32();
+  header.annoteLength = ioBuffer.readUint32();
+  header.totalSize = (ioBuffer.readUint32() << 32) | ioBuffer.readUint32();
+  header.unitLocation = getArray(ioBuffer, 8, 'readUint8');
 
   let compoundUnit = [];
   for (let i = 0; i < 2; i++) {
     let unit = [];
-    let scaler = buffer.readInt16();
+    let scaler = ioBuffer.readInt16();
     for (let j = 0; j < 5; j++) {
-      byte = buffer.readInt16();
+      byte = ioBuffer.readInt16();
       unit.push(byte);
     }
     compoundUnit.push({ scaler, unit });
@@ -120,58 +120,58 @@ export function parseJEOL(file) {
   header.compoundUnit = compoundUnit;
 
   if (header.endian === 'littleEndian') {
-    buffer.setLittleEndian();
+    ioBuffer.setLittleEndian();
   }
-  buffer.seek(header.paramStart);
+  ioBuffer.seek(header.paramStart);
 
   let parameters = {
-    parameterSize: buffer.readUint32(),
-    lowIndex: buffer.readUint32(),
-    highIndex: buffer.readUint32(),
-    totalSize: buffer.readUint32(),
+    parameterSize: ioBuffer.readUint32(),
+    lowIndex: ioBuffer.readUint32(),
+    highIndex: ioBuffer.readUint32(),
+    totalSize: ioBuffer.readUint32(),
   };
   let paramArray = [];
   for (let p = 0; p < parameters.highIndex + 1; p++) {
-    buffer.skip(4);
-    let scaler = buffer.readInt16();
-    let unit = getUnit(buffer, 5);
-    buffer.skip(16);
-    let valueType = table.valueTypeTable[buffer.readInt32()];
-    buffer.seek(buffer.offset - 20);
+    ioBuffer.skip(4);
+    let scaler = ioBuffer.readInt16();
+    let unit = getUnit(ioBuffer, 5);
+    ioBuffer.skip(16);
+    let valueType = table.valueTypeTable[ioBuffer.readInt32()];
+    ioBuffer.seek(ioBuffer.offset - 20);
     let value;
     switch (valueType) {
       case 'String':
-        value = getParamName(buffer, 16);
+        value = getParamName(ioBuffer, 16);
         break;
       case 'Integer':
-        value = buffer.readInt32();
-        buffer.skip(12);
+        value = ioBuffer.readInt32();
+        ioBuffer.skip(12);
         break;
       case 'Float':
-        value = buffer.readFloat64();
-        buffer.skip(8);
+        value = ioBuffer.readFloat64();
+        ioBuffer.skip(8);
         break;
       case 'Complex':
-        value.Real = buffer.readFloat64();
-        value.Imag = buffer.readFloat64();
+        value.Real = ioBuffer.readFloat64();
+        value.Imag = ioBuffer.readFloat64();
         break;
       case 'Infinity':
-        value = buffer.readInt32();
-        buffer.skip(12);
+        value = ioBuffer.readInt32();
+        ioBuffer.skip(12);
         break;
       default:
-        buffer.skip(16);
+        ioBuffer.skip(16);
         break;
     }
-    buffer.skip(4);
-    let name = getParamName(buffer, 28);
+    ioBuffer.skip(4);
+    let name = getParamName(ioBuffer, 28);
     paramArray.push({ name, scaler, unit, value, valueType });
   }
   parameters.paramArray = paramArray;
 
-  buffer.seek(header.dataStart);
+  ioBuffer.seek(header.dataStart);
   if (header.endian === 'littleEndian') {
-    buffer.setLittleEndian();
+    ioBuffer.setLittleEndian();
   }
 
   let data = [];
@@ -191,9 +191,9 @@ export function parseJEOL(file) {
     for (let s = 0; s < dataSectionCount; s++) {
       let section;
       if (header.dataType === '32Bit Float') {
-        section = getArray(buffer, header.dataPoints[0], 'readFloat32');
+        section = getArray(ioBuffer, header.dataPoints[0], 'readFloat32');
       } else if (header.dataType === '64Bit Float') {
-        section = getArray(buffer, header.dataPoints[0], 'readFloat64');
+        section = getArray(ioBuffer, header.dataPoints[0], 'readFloat64');
       }
       if (s === 0) data.re = section;
       if (s === 1) data.im = section;
@@ -223,15 +223,15 @@ export function parseJEOL(file) {
           for (let k = 0; k < me; k++) {
             if (j === 0) {
               if (header.dataType === '32Bit Float') {
-                row[k] = getArray(buffer, me, 'readFloat32');
+                row[k] = getArray(ioBuffer, me, 'readFloat32');
               } else if (header.dataType === '64Bit Float') {
-                row[k] = getArray(buffer, me, 'readFloat64');
+                row[k] = getArray(ioBuffer, me, 'readFloat64');
               }
             } else {
               if (header.dataType === '32Bit Float') {
-                row[k] = row[k].concat(getArray(buffer, me, 'readFloat32'));
+                row[k] = row[k].concat(getArray(ioBuffer, me, 'readFloat32'));
               } else if (header.dataType === '64Bit Float') {
-                row[k] = row[k].concat(getArray(buffer, me, 'readFloat64'));
+                row[k] = row[k].concat(getArray(ioBuffer, me, 'readFloat64'));
               }
             }
           }
@@ -280,30 +280,29 @@ export function parseJEOL(file) {
   }
 
   let digest = {
-    dataDimension: header.dataDimensionNumber,
-    nucleus: nucleus,
-    nucleii: header.dataAxisTitles.slice(0, header.dataDimensionNumber),
-    dataSections: dataSectionCount,
-    field: {
-      magnitude: getPar(parameters, 'field_strength').value * 42.577478518,
-      unit: 'MHz',
+    info: {
+      dataDimension: header.dataDimensionNumber,
+      nucleus: nucleus,
+      nucleii: header.dataAxisTitles.slice(0, header.dataDimensionNumber),
+      dataSections: dataSectionCount,
+      field: {
+        magnitude: getPar(parameters, 'field_strength').value * 42.577478518,
+        unit: 'MHz',
+      },
+      solvent: getPar(parameters, 'solvent').value,
+      dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),
+      experiment: getPar(parameters, 'experiment').value,
+      sampleName: getPar(parameters, 'sample_id').value,
+      temperature: getMagnitude(parameters, 'temp_get'),
+      digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
+      decimationRate: getPar(parameters, 'decimation_rate').value,
+      acquisitionTime: acquisitionTime,
+      spectralWidth: spectralWidth,
+      resolution: resolution,
+      frequency: frequency,
+      frequencyOffset: frequencyOffset,
     },
-    solvent: getPar(parameters, 'solvent').value,
-    dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),
-    experiment: getPar(parameters, 'experiment').value,
-    sampleName: getPar(parameters, 'sample_id').value,
-    temperature: getMagnitude(parameters, 'temp_get'),
-    digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
-    decimationRate: getPar(parameters, 'decimation_rate').value,
-    acquisitionTime: acquisitionTime,
-    spectralWidth: spectralWidth,
-    // spectralWidthClipped: {
-    //   magnitude: getPar(parameters, 'X_SWEEP_CLIPPED').value,
-    //   unit: 'Hz',
-    // },
-    resolution: resolution,
-    frequency: frequency,
-    frequencyOffset: frequencyOffset,
+
     headers: header,
     parameters: parameters,
     data: data,
