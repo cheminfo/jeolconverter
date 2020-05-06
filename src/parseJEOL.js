@@ -174,7 +174,7 @@ export default function parseJEOL(buffer) {
     ioBuffer.setLittleEndian();
   }
 
-  let data = [];
+  let data = {};
   let dataSectionCount = 1;
   let realComplex = 0;
   for (let type of header.dataAxisType) {
