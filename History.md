@@ -1,3 +1,12 @@
+## [0.0.2](https://github.com/cheminfo/jeolconverter/compare/v0.0.1...v0.0.2) (2020-05-07)
+
+
+### Bug Fixes
+
+* correc typos ([7a26605](https://github.com/cheminfo/jeolconverter/commit/7a26605525dd2febc2752ae78a575cdc894109e2))
+
+
+
 ## 0.0.1 (2020-05-06)
 
 
