@@ -14,10 +14,13 @@ read JEOL NMR files.
 ## Usage
 
 ```js
-import library from 'jeolconverter';
+import { readFileSync } from 'fs';
 
-const result = library(args);
-// result is ...
+import { parseJEOL } from 'jeolconverter';
+
+const buffer = readFileSync('pathToFile');
+let parsed = parseJEOL(buffer);
+console.log(parsed);
 ```
 
 ## [API Documentation](https://cheminfo.github.io/jeolconverter/)
