@@ -1,20 +1,10 @@
-import { join } from 'path';
+import { Rutin } from 'jeol-data-test';
 
 import { parseJEOL } from '../src/index';
 
-const { readFileSync } = require('fs');
-
-const proton = 'Rutin_3080ug200uL_DMSOd6_qHNMR_400MHz_Jeol.jdf';
-const carbon = 'Rutin_3080ug200uL_DMSOd6_13CNMR_400MHz_Jeol.jdf';
-const cosy = 'Rutin_3080ug200uL_DMSOd6_COSY_400MHz_Jeol.jdf';
-const hsqc = 'Rutin_3080ug200uL_DMSOd6_HSQC_400MHz_Jeol.jdf';
-const hmbc = 'Rutin_3080ug200uL_DMSOd6_HMBC_400MHz_Jeol.jdf';
-
-const dirName = join(__dirname, '../data/Rutin_NMRdata_400MHz_DMSOd6_Jeol/');
-
 describe('parse a 1D (parseJEOL)', () => {
   it('parse a proton', () => {
-    let parsed = parseJEOL(readFileSync(join(dirName, proton)));
+    let parsed = parseJEOL(Rutin.experiment.proton);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(2);
@@ -31,7 +21,7 @@ describe('parse a 1D (parseJEOL)', () => {
   });
 
   it('parse a carbon', () => {
-    let data = parseJEOL(readFileSync(join(dirName, carbon)));
+    let data = parseJEOL(Rutin.experiment.carbon);
     expect(data.info.nucleus[0]).toStrictEqual('13C');
     expect(data.info.dataDimension).toStrictEqual(1);
     expect(data.info.dataSections).toStrictEqual(2);
@@ -46,7 +36,7 @@ describe('parse a 1D (parseJEOL)', () => {
 
 describe('parse a 2D (parseJEOL)', () => {
   it('parse an HMBC', () => {
-    let data = parseJEOL(readFileSync(join(dirName, hmbc)));
+    let data = parseJEOL(Rutin.experiment.hmbc);
     expect(data.info.dataDimension).toStrictEqual(2);
     expect(data.info.nucleus[0]).toStrictEqual('1H');
     expect(data.info.nucleus[1]).toStrictEqual('13C');
@@ -61,7 +51,7 @@ describe('parse a 2D (parseJEOL)', () => {
   });
 
   it('parse an HSQC', () => {
-    let data = parseJEOL(readFileSync(join(dirName, hsqc)));
+    let data = parseJEOL(Rutin.experiment.hsqc);
     expect(data.info.dataDimension).toStrictEqual(2);
     expect(data.info.nucleus[0]).toStrictEqual('1H');
     expect(data.info.nucleus[1]).toStrictEqual('13C');
@@ -78,7 +68,7 @@ describe('parse a 2D (parseJEOL)', () => {
   });
 
   it('parse a COSY', () => {
-    let data = parseJEOL(readFileSync(join(dirName, cosy)));
+    let data = parseJEOL(Rutin.experiment.cosy);
     expect(data.info.dataDimension).toStrictEqual(2);
     expect(data.info.nucleus[0]).toStrictEqual('1H');
     expect(data.info.nucleus[1]).toStrictEqual('1H');

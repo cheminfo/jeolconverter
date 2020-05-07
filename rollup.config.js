@@ -1,11 +1,11 @@
 const config = {
-  input: 'src/parseJEOL.js',
+  input: 'src/index.js',
   output: {
-    file: 'lib/parseJEOL.js',
+    file: 'lib/index.js',
     format: 'cjs',
     exports: 'named',
   },
-  external: [],
+  external: ['path', 'fs', 'iobuffer'],
 };
 
 export default config;
