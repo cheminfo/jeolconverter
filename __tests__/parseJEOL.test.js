@@ -7,7 +7,7 @@ describe('parse a 1D (parseJEOL)', () => {
     let parsed = parseJEOL(Rutin.experiment.proton);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.dataDimension).toStrictEqual(1);
-    expect(parsed.info.dataSections).toStrictEqual(2);
+    expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
     expect(parsed.info.frequencyOffset[0].magnitude).toStrictEqual(
@@ -18,13 +18,18 @@ describe('parse a 1D (parseJEOL)', () => {
     expect(parsed.headers.dataAxisType[0]).toStrictEqual('Complex');
     expect(parsed.data.re).toHaveLength(32768);
     expect(parsed.data.im).toHaveLength(32768);
+    expect(parsed.headers.dataAxisStart[0]).toStrictEqual(0);
+    expect(parsed.headers.dataAxisStop[0]).toStrictEqual(3.27145728);
+    expect(parsed.info.acquisitionTime[0].magnitude).toStrictEqual(3.27155712);
+    expect(parsed.info.acquisitionTime[0].unit).toStrictEqual('Second');
+    expect(parsed.headers.dataUnits[0].base).toStrictEqual('Second');
   });
 
   it('parse a carbon', () => {
     let parsed = parseJEOL(Rutin.experiment.carbon);
     expect(parsed.info.nucleus[0]).toStrictEqual('13C');
     expect(parsed.info.dataDimension).toStrictEqual(1);
-    expect(parsed.info.dataSections).toStrictEqual(2);
+    expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(typeof parsed.headers).toBe('object');
     expect(typeof parsed.parameters).toBe('object');
@@ -40,7 +45,7 @@ describe('parse a 2D (parseJEOL)', () => {
     expect(parsed.info.dataDimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.nucleus[1]).toStrictEqual('13C');
-    expect(parsed.info.dataSections).toStrictEqual(2);
+    expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(4096);
     expect(parsed.info.dataPoints[1]).toStrictEqual(512);
     expect(typeof parsed.headers).toBe('object');
@@ -55,7 +60,12 @@ describe('parse a 2D (parseJEOL)', () => {
     expect(parsed.info.dataDimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.nucleus[1]).toStrictEqual('13C');
-    expect(parsed.info.dataSections).toStrictEqual(4);
+    expect(parsed.info.dataSections).toStrictEqual([
+      'reRe',
+      'reIm',
+      'imRe',
+      'imIm',
+    ]);
     expect(parsed.info.dataPoints[0]).toStrictEqual(4096);
     expect(parsed.info.dataPoints[1]).toStrictEqual(256);
     expect(typeof parsed.headers).toBe('object');
@@ -72,7 +82,7 @@ describe('parse a 2D (parseJEOL)', () => {
     expect(parsed.info.dataDimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.nucleus[1]).toStrictEqual('1H');
-    expect(parsed.info.dataSections).toStrictEqual(2);
+    expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(5120);
     expect(parsed.info.dataPoints[1]).toStrictEqual(512);
     expect(parsed.info.frequency[1].magnitude).toStrictEqual(399782198.37825);
@@ -103,7 +113,7 @@ describe('parse a 1D (processed)', () => {
     let parsed = parseJEOL(Rutin.experiment.processedProton);
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
     expect(parsed.info.dataDimension).toStrictEqual(1);
-    expect(parsed.info.dataSections).toStrictEqual(2);
+    expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
     expect(parsed.info.dataPoints[0]).toStrictEqual(262144);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
@@ -111,6 +121,7 @@ describe('parse a 1D (processed)', () => {
       7494.00479616307,
     );
     expect(parsed.info.acquisitionTime[0].magnitude).toStrictEqual(8.74512384);
+    expect(parsed.info.acquisitionTime[0].unit).toStrictEqual('Second');
     expect(parsed.info.resolution[0].magnitude).toStrictEqual(
       0.11434943841801559,
     );

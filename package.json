@@ -21,7 +21,14 @@
     "type": "git",
     "url": "git+https://github.com/cheminfo/jeolconverter.git"
   },
-  "keywords": [],
+  "keywords": [
+    "magnetic resonance",
+    "nmr",
+    "jeol",
+    "dataset",
+    "converter",
+    "parser"
+  ],
   "author": "Julien Wist",
   "license": "MIT",
   "bugs": {
@@ -52,7 +59,7 @@
     "path": "^0.12.7",
     "prettier": "^2.0.5",
     "rollup": "^2.8.2",
-    "jeol-data-test": "^0.0.3"
+    "jeol-data-test": "^0.1.1"
   },
   "dependencies": {
     "iobuffer": "^5.0.2"

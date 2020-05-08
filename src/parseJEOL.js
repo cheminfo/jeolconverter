@@ -262,6 +262,7 @@ export default function parseJEOL(buffer) {
   let resolution = [];
   let frequency = [];
   let frequencyOffset = [];
+  let dataUnits = [];
   if ((header.dataFormat === 'One_D') | (header.dataFormat === 'Two_D')) {
     nucleus.push(getPar(parameters, 'X_DOMAIN').value);
     acquisitionTime.push(getMagnitude(parameters, 'x_acq_time'));
@@ -269,6 +270,7 @@ export default function parseJEOL(buffer) {
     resolution.push(getMagnitude(parameters, 'X_RESOLUTION'));
     frequency.push(getMagnitude(parameters, 'X_FREQ'));
     frequencyOffset.push(getMagnitude(parameters, 'X_OFFSET'));
+    dataUnits.push(header.dataUnits[0].base);
   }
   if (header.dataFormat === 'Two_D') {
     nucleus.push(getPar(parameters, 'Y_DOMAIN').value);
@@ -277,30 +279,31 @@ export default function parseJEOL(buffer) {
     resolution.push(getMagnitude(parameters, 'Y_RESOLUTION'));
     frequency.push(getMagnitude(parameters, 'Y_FREQ'));
     frequencyOffset.push(getMagnitude(parameters, 'X_OFFSET'));
+    dataUnits.push(header.dataUnits[1].base);
   }
 
   let digest = {
     info: {
-      dataDimension: header.dataDimensionNumber,
-      nucleus: nucleus,
-      nucleii: header.dataAxisTitles.slice(0, header.dataDimensionNumber),
-      dataSections: dataSectionCount,
+      sampleName: getPar(parameters, 'sample_id').value,
+      solvent: getPar(parameters, 'solvent').value,
+      temperature: getMagnitude(parameters, 'temp_get'),
       field: {
         magnitude: getPar(parameters, 'field_strength').value * 42.577478518,
         unit: 'MHz',
       },
-      solvent: getPar(parameters, 'solvent').value,
-      dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),
+      nucleus: nucleus,
       experiment: getPar(parameters, 'experiment').value,
-      sampleName: getPar(parameters, 'sample_id').value,
-      temperature: getMagnitude(parameters, 'temp_get'),
-      digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
-      decimationRate: getPar(parameters, 'decimation_rate').value,
+      dataDimension: header.dataDimensionNumber,
+      dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),
+      dataUnits: dataUnits,
+      dataSections: Object.keys(data),
+      frequency: frequency,
+      frequencyOffset: frequencyOffset,
       acquisitionTime: acquisitionTime,
       spectralWidth: spectralWidth,
       resolution: resolution,
-      frequency: frequency,
-      frequencyOffset: frequencyOffset,
+      digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
+      decimationRate: getPar(parameters, 'decimation_rate').value,
     },
 
     headers: header,
