@@ -247,10 +247,16 @@ export default function parseJEOL(buffer) {
         if (s === 1) data.im = section;
       }
       if (dataSectionCount === 4) {
-        if (s === 0) data.reRe = section;
-        if (s === 1) data.reIm = section;
-        if (s === 2) data.imRe = section;
-        if (s === 3) data.imIm = section;
+        if (s === 0) {
+          data.re = {};
+          data.re.re = section;
+        }
+        if (s === 1) data.re.im = section;
+        if (s === 2) {
+          data.im = {};
+          data.im.re = section;
+        }
+        if (s === 3) data.im.im = section;
       }
     }
   }

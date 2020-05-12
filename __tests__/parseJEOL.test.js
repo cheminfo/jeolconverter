@@ -60,21 +60,16 @@ describe('parse a 2D (parseJEOL)', () => {
     expect(parsed.info.dataDimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.nucleus[1]).toStrictEqual('13C');
-    expect(parsed.info.dataSections).toStrictEqual([
-      'reRe',
-      'reIm',
-      'imRe',
-      'imIm',
-    ]);
+    expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(4096);
     expect(parsed.info.dataPoints[1]).toStrictEqual(256);
     expect(typeof parsed.headers).toBe('object');
     expect(typeof parsed.parameters).toBe('object');
     expect(parsed.headers.dataAxisType[0]).toStrictEqual('Complex');
-    expect(parsed.data.reRe).toHaveLength(256);
-    expect(parsed.data.reIm).toHaveLength(256);
-    expect(parsed.data.imRe).toHaveLength(256);
-    expect(parsed.data.imIm).toHaveLength(256);
+    expect(parsed.data.re.re).toHaveLength(256);
+    expect(parsed.data.re.im).toHaveLength(256);
+    expect(parsed.data.im.re).toHaveLength(256);
+    expect(parsed.data.im.im).toHaveLength(256);
   });
 
   it('parse a COSY', () => {
