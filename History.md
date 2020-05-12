@@ -1,3 +1,7 @@
+# [0.1.0](https://github.com/cheminfo/jeolconverter/compare/v0.0.4...v0.1.0) (2020-05-12)
+
+
+
 ## [0.0.4](https://github.com/cheminfo/jeolconverter/compare/v0.0.3...v0.0.4) (2020-05-12)
 
 
