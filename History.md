@@ -1,3 +1,17 @@
+## [0.0.4](https://github.com/cheminfo/jeolconverter/compare/v0.0.3...v0.0.4) (2020-05-12)
+
+
+### Bug Fixes
+
+* improve info section ([a7b7285](https://github.com/cheminfo/jeolconverter/commit/a7b72858c18e89bfd02353fc0d493a657e4a05d5))
+
+
+### Features
+
+* add processed test case ([aa58b9e](https://github.com/cheminfo/jeolconverter/commit/aa58b9ebbca8eb68c9d5371b3ab2aef47d23321b))
+
+
+
 ## [0.0.3](https://github.com/cheminfo/jeolconverter/compare/v0.0.2...v0.0.3) (2020-05-07)
 
 
