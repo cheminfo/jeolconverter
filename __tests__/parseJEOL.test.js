@@ -1,6 +1,6 @@
 import { Rutin } from 'jeol-data-test';
 
-import { parseJEOL } from '../src/index';
+import { parseJEOL } from '../src';
 
 describe('parse a 1D (parseJEOL)', () => {
   it('parse a proton', () => {

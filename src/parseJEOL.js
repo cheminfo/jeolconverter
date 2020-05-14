@@ -15,7 +15,7 @@ import {
  * @param {ArrayBuffer} buffer - a buffer object containing the JDL file
  * @return {Object} - an Object with converted data
  */
-export default function parseJEOL(buffer) {
+export function parseJEOL(buffer) {
   let ioBuffer = new IOBuffer(buffer);
   ioBuffer.setBigEndian();
 

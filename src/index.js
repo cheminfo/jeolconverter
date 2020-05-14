@@ -1,3 +1,1 @@
-import parseJEOL from './parseJEOL';
-
-export { parseJEOL };
+export * from './parseJEOL';
