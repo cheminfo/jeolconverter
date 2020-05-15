@@ -1,3 +1,12 @@
+## [0.1.1](https://github.com/cheminfo/jeolconverter/compare/v0.1.0...v0.1.1) (2020-05-15)
+
+
+### Bug Fixes
+
+* export clipped spectral width ([243af87](https://github.com/cheminfo/jeolconverter/commit/243af877e50cdf933dfd0f1ab014cca0645fb27b))
+
+
+
 # [0.1.0](https://github.com/cheminfo/jeolconverter/compare/v0.0.4...v0.1.0) (2020-05-12)
 
 
