@@ -260,11 +260,12 @@ export function parseJEOL(buffer) {
       }
     }
   }
-  // console.log(getPar(parameters, 'X_DOMAIN').value);
-
+  // console.log(getPar(parameters, 'X_SWEEP_CLIPPED').value);
+  // console.log(getPar(parameters, 'X_SWEEP').value);
   let nucleus = [];
   let acquisitionTime = [];
   let spectralWidth = [];
+  let spectralWidthClipped = [];
   let resolution = [];
   let frequency = [];
   let frequencyOffset = [];
@@ -273,6 +274,7 @@ export function parseJEOL(buffer) {
     nucleus.push(getPar(parameters, 'X_DOMAIN').value);
     acquisitionTime.push(getMagnitude(parameters, 'x_acq_time'));
     spectralWidth.push(getMagnitude(parameters, 'X_SWEEP'));
+    spectralWidthClipped.push(getMagnitude(parameters, 'X_SWEEP_CLIPPED'));
     resolution.push(getMagnitude(parameters, 'X_RESOLUTION'));
     frequency.push(getMagnitude(parameters, 'X_FREQ'));
     frequencyOffset.push(getMagnitude(parameters, 'X_OFFSET'));
@@ -282,9 +284,10 @@ export function parseJEOL(buffer) {
     nucleus.push(getPar(parameters, 'Y_DOMAIN').value);
     acquisitionTime.push(getMagnitude(parameters, 'y_acq_time'));
     spectralWidth.push(getMagnitude(parameters, 'Y_SWEEP'));
+    // spectralWidthClipped.push(getMagnitude(parameters, 'Y_SWEEP_CLIPPED'));
     resolution.push(getMagnitude(parameters, 'Y_RESOLUTION'));
     frequency.push(getMagnitude(parameters, 'Y_FREQ'));
-    frequencyOffset.push(getMagnitude(parameters, 'X_OFFSET'));
+    frequencyOffset.push(getMagnitude(parameters, 'Y_OFFSET'));
     dataUnits.push(header.dataUnits[1].base);
   }
 
@@ -303,10 +306,11 @@ export function parseJEOL(buffer) {
       dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),
       dataUnits: dataUnits,
       dataSections: Object.keys(data),
-      frequency: frequency,
-      frequencyOffset: frequencyOffset,
-      acquisitionTime: acquisitionTime,
-      spectralWidth: spectralWidth,
+      frequency,
+      frequencyOffset,
+      acquisitionTime,
+      spectralWidth,
+      spectralWidthClipped,
       resolution: resolution,
       digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
       decimationRate: getPar(parameters, 'decimation_rate').value,
