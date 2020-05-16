@@ -1,3 +1,12 @@
+## [0.1.2](https://github.com/cheminfo/jeolconverter/compare/v0.1.1...v0.1.2) (2020-05-16)
+
+
+### Bug Fixes
+
+* avoid getPar to return undefined ([7d5b78b](https://github.com/cheminfo/jeolconverter/commit/7d5b78b3d71d3f3ead93a12a9236cba2d5e09b3e))
+
+
+
 ## [0.1.1](https://github.com/cheminfo/jeolconverter/compare/v0.1.0...v0.1.1) (2020-05-15)
 
 

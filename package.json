@@ -1,6 +1,6 @@
 {
   "name": "jeolconverter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "read JEOL NMR files",
   "main": "lib/index.js",
   "module": "src/index.js",
