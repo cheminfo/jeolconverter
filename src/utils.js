@@ -1,11 +1,14 @@
 import * as table from './conversionTables';
 
 export function getPar(param, searchStr) {
-  return param.paramArray.find((o) => o.name === searchStr);
+  return param.paramArray.find((o) => o.name === searchStr) || '';
 }
 
 export function getMagnitude(param, searchStr) {
-  let par = getPar(param, searchStr);
+  let par = getPar(param, searchStr) || 'NA';
+  if (par === 'NA') {
+    return { magnitude: 'NA', unit: 'NA' };
+  }
   let unit = par.unit[0].base;
   let unitMult = table.unitPrefixTable[par.unit[0].prefix];
   let magnitude = par.value * 10 ** unitMult;
