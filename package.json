@@ -59,7 +59,7 @@
     "path": "^0.12.7",
     "prettier": "^2.0.5",
     "rollup": "^2.10.2",
-    "jeol-data-test": "^0.2.2"
+    "jeol-data-test": "^0.2.3"
   },
   "dependencies": {
     "iobuffer": "^5.0.2"
