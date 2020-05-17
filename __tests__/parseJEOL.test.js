@@ -124,7 +124,7 @@ describe('parse a 1D (processed)', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
+    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(262144);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -168,7 +168,7 @@ describe('parse a 1D (processed)', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
+    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(262144);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -198,7 +198,7 @@ describe('parse a 1D (processed)', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
+    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -228,7 +228,7 @@ describe('parse a 1D (processed)', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
+    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -258,7 +258,6 @@ describe('parse more', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -288,7 +287,6 @@ describe('parse more', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -318,7 +316,6 @@ describe('parse more', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -346,7 +343,6 @@ describe('parse more', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -374,7 +370,6 @@ describe('parse more', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -402,7 +397,6 @@ describe('parse more', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
@@ -432,7 +426,7 @@ describe('parse more', () => {
     expect(parsed.info.nucleus[0]).toStrictEqual('13C');
     expect(parsed.info.dataDimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(399.7925601540468);
+    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(

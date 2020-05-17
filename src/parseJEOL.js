@@ -19,14 +19,16 @@ export function parseJEOL(buffer) {
   let ioBuffer = new IOBuffer(buffer);
   ioBuffer.setBigEndian();
 
+  // read header section
   let byte;
-  let header = {
-    fileIdentifier: ioBuffer.readChars(8),
-    endian: table.endianness[ioBuffer.readInt8()],
-    majorVersion: ioBuffer.readUint8(),
-    minorVersion: ioBuffer.readUint16(),
-    dataDimensionNumber: ioBuffer.readUint8(),
-  };
+  let header = {};
+  let byteArray = [];
+
+  header.fileIdentifier = ioBuffer.readChars(8);
+  header.endian = table.endianness[ioBuffer.readInt8()];
+  header.majorVersion = ioBuffer.readUint8();
+  header.minorVersion = ioBuffer.readUint16();
+  header.dataDimensionNumber = ioBuffer.readUint8();
 
   header.dataDimensionExist = ioBuffer
     .readByte()
@@ -46,7 +48,6 @@ export function parseJEOL(buffer) {
   header.dataUnits = getUnit(ioBuffer, 8);
   header.title = getString(ioBuffer, 124);
 
-  let byteArray = [];
   for (byte in getArray(ioBuffer, 4, 'readUint8')) {
     byteArray.push(table.dataAxisRangedTable[byte >> 4]);
     byteArray.push(table.dataAxisRangedTable[byte & 0b00001111]);
@@ -119,6 +120,7 @@ export function parseJEOL(buffer) {
   }
   header.compoundUnit = compoundUnit;
 
+  // section parameters (param header and array)
   if (header.endian === 'littleEndian') {
     ioBuffer.setLittleEndian();
   }
@@ -169,6 +171,7 @@ export function parseJEOL(buffer) {
   }
   parameters.paramArray = paramArray;
 
+  // data section
   ioBuffer.seek(header.dataStart);
   if (header.endian === 'littleEndian') {
     ioBuffer.setLittleEndian();
@@ -178,13 +181,17 @@ export function parseJEOL(buffer) {
   let dataSectionCount = 1;
   let realComplex = 0;
   for (let type of header.dataAxisType) {
-    if ((type === 'Real_Complex') & (realComplex === 0)) {
+    if (type === 'Real_Complex' && realComplex === 0) {
       dataSectionCount += 1;
       realComplex += 1;
     }
     if (type === 'Complex') {
       dataSectionCount *= 2;
     }
+  }
+
+  if (header.dataFormat !== 'One_D' && header.dataFormat !== 'Two_D') {
+    throw new Error('Only One_D and two_D data formats are implemented yet');
   }
 
   if (header.dataFormat === 'One_D') {
@@ -205,7 +212,7 @@ export function parseJEOL(buffer) {
     let dim1 = header.dataPoints[0];
     let dim2 = header.dataPoints[1];
     // console.log(
-    //   `dim1: ${dim1},
+    // `dim1: ${dim1},
     // dim2: ${dim2},
     // total: ${dim1 * dim2},
     // total(byte): ${dim1 * dim2 * 8},
@@ -260,8 +267,8 @@ export function parseJEOL(buffer) {
       }
     }
   }
-  // console.log(getPar(parameters, 'X_SWEEP_CLIPPED').value);
-  // console.log(getPar(parameters, 'X_SWEEP').value);
+
+  // format output
   let nucleus = [];
   let acquisitionTime = [];
   let spectralWidth = [];
@@ -270,7 +277,7 @@ export function parseJEOL(buffer) {
   let frequency = [];
   let frequencyOffset = [];
   let dataUnits = [];
-  if ((header.dataFormat === 'One_D') | (header.dataFormat === 'Two_D')) {
+  if (header.dataFormat === 'One_D' || header.dataFormat === 'Two_D') {
     nucleus.push(getPar(parameters, 'X_DOMAIN').value);
     acquisitionTime.push(getMagnitude(parameters, 'x_acq_time'));
     spectralWidth.push(getMagnitude(parameters, 'X_SWEEP'));
@@ -284,7 +291,6 @@ export function parseJEOL(buffer) {
     nucleus.push(getPar(parameters, 'Y_DOMAIN').value);
     acquisitionTime.push(getMagnitude(parameters, 'y_acq_time'));
     spectralWidth.push(getMagnitude(parameters, 'Y_SWEEP'));
-    // spectralWidthClipped.push(getMagnitude(parameters, 'Y_SWEEP_CLIPPED'));
     resolution.push(getMagnitude(parameters, 'Y_RESOLUTION'));
     frequency.push(getMagnitude(parameters, 'Y_FREQ'));
     frequencyOffset.push(getMagnitude(parameters, 'Y_OFFSET'));
@@ -294,16 +300,20 @@ export function parseJEOL(buffer) {
   let digest = {
     info: {
       sampleName: getPar(parameters, 'sample_id').value,
+      creationTime: header.creationTime,
+      revisionTime: header.revisionTime,
+      author: header.author,
+      comment: header.comment,
       solvent: getPar(parameters, 'solvent').value,
       temperature: getMagnitude(parameters, 'temp_get'),
-      field: {
-        magnitude: getPar(parameters, 'field_strength').value * 42.577478518,
-        unit: 'MHz',
-      },
+      probeId: getPar(parameters, 'probe_id').value,
+      field: getMagnitude(parameters, 'field_strength'),
       nucleus: nucleus,
       experiment: getPar(parameters, 'experiment').value,
       dataDimension: header.dataDimensionNumber,
       dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),
+      dataOffsetStart: header.dataAxisStart,
+      dataOffsetStop: header.dataAxisStop,
       dataUnits: dataUnits,
       dataSections: Object.keys(data),
       frequency,
@@ -311,9 +321,12 @@ export function parseJEOL(buffer) {
       acquisitionTime,
       spectralWidth,
       spectralWidthClipped,
+      dataAxisStart: header.dataAxisStart,
+      dataAxisStop: header.dataAxisStop,
       resolution: resolution,
       digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
       decimationRate: getPar(parameters, 'decimation_rate').value,
+      paramList: parameters.paramArray.map((par) => par.name),
     },
 
     headers: header,
