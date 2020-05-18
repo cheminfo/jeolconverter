@@ -1,3 +1,12 @@
+## [0.1.5](https://github.com/cheminfo/jeolconverter/compare/v0.1.4...v0.1.5) (2020-05-18)
+
+
+### Bug Fixes
+
+* dataOffset ([9635598](https://github.com/cheminfo/jeolconverter/commit/9635598d04ea9aa4d7ef246a7c483e5c65947e73))
+
+
+
 ## [0.1.4](https://github.com/cheminfo/jeolconverter/compare/v0.1.3...v0.1.4) (2020-05-17)
 
 
