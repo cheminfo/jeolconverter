@@ -159,6 +159,7 @@ describe('parse a 1D (processed)', () => {
     expect(clipped).toBeCloseTo(209715, 0);
     expect(parsed.headers.dataAxisStart[0]).toStrictEqual(13.498044630825031);
     expect(parsed.headers.dataAxisStop[0]).toStrictEqual(-1.4980446308250324);
+    expect(parsed.info.probeId).toStrictEqual(3448);
   });
 
   it('parse a processed proton 2', () => {
