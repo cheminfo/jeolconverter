@@ -8,10 +8,15 @@ describe('parse a 1D (parseJEOL)', () => {
       experiments['Rutin_3080ug200uL_DMSOd6_qHNMR_400MHz_Jeol.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.pulseStrength90).toBeCloseTo(37775.763070414, 5);
+    expect(parsed.info.numberOfScans).toStrictEqual(128);
+    expect(parsed.info.relaxationTime.magnitude).toStrictEqual(56);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      399782198.37825,
+    );
     expect(parsed.info.frequencyOffset[0].magnitude).toStrictEqual(
       8.999999999999998,
     );
@@ -35,7 +40,7 @@ describe('parse a 1D (parseJEOL)', () => {
       experiments['Rutin_3080ug200uL_DMSOd6_13CNMR_400MHz_Jeol.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('13C');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(typeof parsed.headers).toBe('object');
@@ -51,7 +56,7 @@ describe('parse a 2D (parseJEOL)', () => {
     let parsed = parseJEOL(
       experiments['Rutin_3080ug200uL_DMSOd6_HMBC_400MHz_Jeol.jdf'],
     );
-    expect(parsed.info.dataDimension).toStrictEqual(2);
+    expect(parsed.info.dimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.nucleus[1]).toStrictEqual('13C');
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
@@ -68,7 +73,7 @@ describe('parse a 2D (parseJEOL)', () => {
     let parsed = parseJEOL(
       experiments['Rutin_3080ug200uL_DMSOd6_HSQC_400MHz_Jeol.jdf'],
     );
-    expect(parsed.info.dataDimension).toStrictEqual(2);
+    expect(parsed.info.dimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.nucleus[1]).toStrictEqual('13C');
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
@@ -87,14 +92,16 @@ describe('parse a 2D (parseJEOL)', () => {
     let parsed = parseJEOL(
       experiments['Rutin_3080ug200uL_DMSOd6_COSY_400MHz_Jeol.jdf'],
     );
-    expect(parsed.info.dataDimension).toStrictEqual(2);
+    expect(parsed.info.dimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
     expect(parsed.info.nucleus[1]).toStrictEqual('1H');
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(5120);
     expect(parsed.info.dataPoints[1]).toStrictEqual(512);
-    expect(parsed.info.frequency[1].magnitude).toStrictEqual(399782198.37825);
-    expect(parsed.info.frequency[1].unit).toStrictEqual('Hertz');
+    expect(parsed.info.originFrequency[1].magnitude).toStrictEqual(
+      399782198.37825,
+    );
+    expect(parsed.info.originFrequency[1].unit).toStrictEqual('Hertz');
     expect(parsed.info.frequencyOffset[1].magnitude).toStrictEqual(5);
     expect(parsed.info.frequencyOffset[1].unit).toStrictEqual('Ppm');
     expect(parsed.info.acquisitionTime[0].magnitude).toStrictEqual(
@@ -122,11 +129,13 @@ describe('parse a 1D (processed)', () => {
       experiments['8PA_SynLK_5360u150uDMSO_snc1811_qH_SpinOn-1-2.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
+    expect(parsed.info.fieldStrength.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(262144);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      399782198.37825,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       7494.00479616307,
     );
@@ -159,7 +168,7 @@ describe('parse a 1D (processed)', () => {
     expect(clipped).toBeCloseTo(209715, 0);
     expect(parsed.headers.dataAxisStart[0]).toStrictEqual(13.498044630825031);
     expect(parsed.headers.dataAxisStop[0]).toStrictEqual(-1.4980446308250324);
-    expect(parsed.info.probeId).toStrictEqual(3448);
+    expect(parsed.info.probeName).toStrictEqual(3448);
   });
 
   it('parse a processed proton 2', () => {
@@ -167,11 +176,13 @@ describe('parse a 1D (processed)', () => {
       experiments['8PA_SynLK_5360u150uDMSO_snc1811_qH_spinOff-1-2.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
+    expect(parsed.info.fieldStrength.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(262144);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      399782198.37825,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       7494.00479616307,
     );
@@ -197,11 +208,13 @@ describe('parse a 1D (processed)', () => {
       experiments['PM032109_5000u200u_01172018bzhou_qH-1-1.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
+    expect(parsed.info.fieldStrength.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      399782198.37825,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       7494.00479616307,
     );
@@ -227,11 +240,13 @@ describe('parse a 1D (processed)', () => {
       experiments['PM032220_3000U200U_Bin_180218_qH-1-1.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
+    expect(parsed.info.fieldStrength.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      399782198.37825,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       7494.00479616307,
     );
@@ -257,10 +272,12 @@ describe('parse more', () => {
   it('parse 11_pm033220_400JEOL_278Kcarbon_.jdf', () => {
     let parsed = parseJEOL(experiments['11_pm033220_400JEOL_278Kcarbon_.jdf']);
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      100525303.3251654,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       31565.656565656565,
     );
@@ -286,10 +303,12 @@ describe('parse more', () => {
       experiments['12_pm033236_400JEOL_278k carbon_C.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      100525303.3251654,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       31565.656565656565,
     );
@@ -315,10 +334,12 @@ describe('parse more', () => {
       experiments['13_pm032839_400JEOL_278k carbon_C.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      100525303.3251654,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       31565.656565656565,
     );
@@ -342,10 +363,12 @@ describe('parse more', () => {
   it('14_400JEOL_PM033228 278K_C.jdf', () => {
     let parsed = parseJEOL(experiments['14_400JEOL_PM033228 278K_C.jdf']);
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      100525303.3251654,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       31565.656565656565,
     );
@@ -369,10 +392,12 @@ describe('parse more', () => {
   it('16_pm031642_400JEOL_278k_C.jdf', () => {
     let parsed = parseJEOL(experiments['16_pm031642_400JEOL_278k_C.jdf']);
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      100525303.3251654,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       31565.656565656565,
     );
@@ -396,10 +421,12 @@ describe('parse more', () => {
   it('PM031528 255K_400JEOL_C.jdf', () => {
     let parsed = parseJEOL(experiments['PM031528 255K_400JEOL_C.jdf']);
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(65536);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      100525303.3251654,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       31565.656565656565,
     );
@@ -425,11 +452,13 @@ describe('parse more', () => {
       experiments['PM032220_3000U200U_MeOD_18224Bin_qC-2-1.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('13C');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
-    expect(parsed.info.field.magnitude).toStrictEqual(9.389766);
+    expect(parsed.info.fieldStrength.magnitude).toStrictEqual(9.389766);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(100525303.3251654);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      100525303.3251654,
+    );
     expect(parsed.info.spectralWidth[0].magnitude).toStrictEqual(
       31565.656565656565,
     );
@@ -457,10 +486,12 @@ describe('parse EC=8C', () => {
       experiments['EC=8C_5m200u_MeOD_bzhou21_20190228_qH-1-1.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      399782198.37825,
+    );
     expect(parsed.info.frequencyOffset[0].magnitude).toStrictEqual(5);
     expect(typeof parsed.headers).toBe('object');
     expect(typeof parsed.parameters).toBe('object');
@@ -479,7 +510,7 @@ describe('parse EC=8C', () => {
       experiments['EC=8C_5m200u_MeOD_bzhou21_20190228_qCarbon-1-1.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(typeof parsed.headers).toBe('object');
@@ -493,7 +524,7 @@ describe('parse EC=8C', () => {
     let parsed = parseJEOL(
       experiments['EC=8C_5m200u_MeOD_bzhou21_20190228_HMBCabs-1-1.jdf'],
     );
-    expect(parsed.info.dataDimension).toStrictEqual(2);
+    expect(parsed.info.dimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
     expect(parsed.info.nucleus[1]).toStrictEqual('Carbon13');
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
@@ -510,7 +541,7 @@ describe('parse EC=8C', () => {
     let parsed = parseJEOL(
       experiments['EC=8C_5m200u_MeOD_bzhou21_20190228__HSQC-1-1.jdf'],
     );
-    expect(parsed.info.dataDimension).toStrictEqual(2);
+    expect(parsed.info.dimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
     expect(parsed.info.nucleus[1]).toStrictEqual('Carbon13');
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
@@ -532,10 +563,12 @@ describe('parse EC=8EC', () => {
       experiments['EC=8EC_2m200u_MeOD_bzhou21_20190328_qH-1-1.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
-    expect(parsed.info.frequency[0].magnitude).toStrictEqual(399782198.37825);
+    expect(parsed.info.originFrequency[0].magnitude).toStrictEqual(
+      399782198.37825,
+    );
     expect(parsed.info.frequencyOffset[0].magnitude).toStrictEqual(5);
     expect(typeof parsed.headers).toBe('object');
     expect(typeof parsed.parameters).toBe('object');
@@ -554,7 +587,7 @@ describe('parse EC=8EC', () => {
       experiments['EC=8EC_2m200u_MeOD_bzhou21_20190328_qC-1-1.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('Carbon13');
-    expect(parsed.info.dataDimension).toStrictEqual(1);
+    expect(parsed.info.dimension).toStrictEqual(1);
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
     expect(parsed.info.dataPoints[0]).toStrictEqual(32768);
     expect(typeof parsed.headers).toBe('object');
@@ -568,7 +601,7 @@ describe('parse EC=8EC', () => {
     let parsed = parseJEOL(
       experiments['EC=8EC_2m200u_MeOD_bzhou21_20190328_HMBC-ABS-1-1.jdf'],
     );
-    expect(parsed.info.dataDimension).toStrictEqual(2);
+    expect(parsed.info.dimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
     expect(parsed.info.nucleus[1]).toStrictEqual('Carbon13');
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);
@@ -585,7 +618,7 @@ describe('parse EC=8EC', () => {
     let parsed = parseJEOL(
       experiments['EC=8EC_2m200u_MeOD_bzhou21_20190328_HSQC-1-1.jdf'],
     );
-    expect(parsed.info.dataDimension).toStrictEqual(2);
+    expect(parsed.info.dimension).toStrictEqual(2);
     expect(parsed.info.nucleus[0]).toStrictEqual('Proton');
     expect(parsed.info.nucleus[1]).toStrictEqual('Carbon13');
     expect(parsed.info.dataSections).toStrictEqual(['re', 'im']);

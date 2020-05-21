@@ -274,7 +274,7 @@ export function parseJEOL(buffer) {
   let spectralWidth = [];
   let spectralWidthClipped = [];
   let resolution = [];
-  let frequency = [];
+  let originFrequency = [];
   let frequencyOffset = [];
   let dataUnits = [];
   if (header.dataFormat === 'One_D' || header.dataFormat === 'Two_D') {
@@ -283,7 +283,7 @@ export function parseJEOL(buffer) {
     spectralWidth.push(getMagnitude(parameters, 'X_SWEEP'));
     spectralWidthClipped.push(getMagnitude(parameters, 'X_SWEEP_CLIPPED'));
     resolution.push(getMagnitude(parameters, 'X_RESOLUTION'));
-    frequency.push(getMagnitude(parameters, 'X_FREQ'));
+    originFrequency.push(getMagnitude(parameters, 'X_FREQ'));
     frequencyOffset.push(getMagnitude(parameters, 'X_OFFSET'));
     dataUnits.push(header.dataUnits[0].base);
   }
@@ -292,7 +292,7 @@ export function parseJEOL(buffer) {
     acquisitionTime.push(getMagnitude(parameters, 'y_acq_time'));
     spectralWidth.push(getMagnitude(parameters, 'Y_SWEEP'));
     resolution.push(getMagnitude(parameters, 'Y_RESOLUTION'));
-    frequency.push(getMagnitude(parameters, 'Y_FREQ'));
+    originFrequency.push(getMagnitude(parameters, 'Y_FREQ'));
     frequencyOffset.push(getMagnitude(parameters, 'Y_OFFSET'));
     dataUnits.push(header.dataUnits[1].base);
   }
@@ -306,17 +306,20 @@ export function parseJEOL(buffer) {
       comment: header.comment,
       solvent: getPar(parameters, 'solvent').value,
       temperature: getMagnitude(parameters, 'temp_get'),
-      probeId: getPar(parameters, 'probe_id').value,
-      field: getMagnitude(parameters, 'field_strength'),
-      nucleus: nucleus,
+      probeName: getPar(parameters, 'probe_id').value,
+      fieldStrength: getMagnitude(parameters, 'field_strength'),
       experiment: getPar(parameters, 'experiment').value,
-      dataDimension: header.dataDimensionNumber,
+      dimension: header.dataDimensionNumber,
+      nucleus: nucleus,
+      pulseStrength90: 1 / (4 * getMagnitude(parameters, 'X90').magnitude),
+      numberOfScans: getPar(parameters, 'SCANS').value,
+      relaxationTime: getMagnitude(parameters, 'relaxation_delay'),
       dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),
       dataOffsetStart: header.dataOffsetStart,
       dataOffsetStop: header.dataOffsetStop,
       dataUnits: dataUnits,
       dataSections: Object.keys(data),
-      frequency,
+      originFrequency,
       frequencyOffset,
       acquisitionTime,
       spectralWidth,
@@ -326,7 +329,7 @@ export function parseJEOL(buffer) {
       resolution: resolution,
       digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
       decimationRate: getPar(parameters, 'decimation_rate').value,
-      paramList: parameters.paramArray.map((par) => par.name),
+      paramList: JSON.stringify(parameters.paramArray.map((par) => par.name)),
     },
 
     headers: header,
