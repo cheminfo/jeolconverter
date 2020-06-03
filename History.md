@@ -1,3 +1,13 @@
+## [0.1.6](https://github.com/cheminfo/jeolconverter/compare/v0.1.5...v0.1.6) (2020-06-03)
+
+
+### Bug Fixes
+
+* adding more parameters to info ([b5d93b2](https://github.com/cheminfo/jeolconverter/commit/b5d93b252b74851acd5115652d5a007f894c566f))
+* corrects info ([9125f89](https://github.com/cheminfo/jeolconverter/commit/9125f89133742fcb8ad7bdfa089fd9cad3b7cb89))
+
+
+
 ## [0.1.5](https://github.com/cheminfo/jeolconverter/compare/v0.1.4...v0.1.5) (2020-05-18)
 
 
