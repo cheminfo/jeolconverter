@@ -311,7 +311,7 @@ export function parseJEOL(buffer) {
       experiment: getPar(parameters, 'experiment').value,
       dimension: header.dataDimensionNumber,
       nucleus: nucleus,
-      pulseStrength90: 1 / (4 * getMagnitude(parameters, 'X90').magnitude),
+      pulseStrength90: getMagnitude(parameters, 'X90'),
       numberOfScans: getPar(parameters, 'SCANS').value,
       relaxationTime: getMagnitude(parameters, 'relaxation_delay'),
       dataPoints: header.dataPoints.slice(0, header.dataDimensionNumber),

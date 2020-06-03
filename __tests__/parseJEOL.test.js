@@ -8,7 +8,7 @@ describe('parse a 1D (parseJEOL)', () => {
       experiments['Rutin_3080ug200uL_DMSOd6_qHNMR_400MHz_Jeol.jdf'],
     );
     expect(parsed.info.nucleus[0]).toStrictEqual('1H');
-    expect(parsed.info.pulseStrength90).toBeCloseTo(37775.763070414, 5);
+    expect(parsed.info.pulseStrength90.magnitude).toBeCloseTo(0.000006618, 5);
     expect(parsed.info.numberOfScans).toStrictEqual(128);
     expect(parsed.info.relaxationTime.magnitude).toStrictEqual(56);
     expect(parsed.info.dimension).toStrictEqual(1);
