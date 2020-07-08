@@ -4,6 +4,40 @@ export function getPar(param, searchStr) {
   return param.paramArray.find((o) => o.name === searchStr) || '';
 }
 
+export function getDigitalFilter(param) {
+  const orders = param.paramArray.find((e) => e.name === 'orders');
+  const factors = param.paramArray.find((e) => e.name === 'factors');
+  const sweep = param.paramArray.find((e) => e.name === 'X_SWEEP');
+  const acqTime = param.paramArray.find((e) => e.name === 'x_acq_time');
+  const nbPoints = param.paramArray.find((e) => e.name === 'X_POINTS');
+  const s = parseInt(orders.value.slice(0, 1), 10);
+  const jump = orders.value.slice(1).length / s;
+
+  let arg = 0;
+  let factorNumber = new Int8Array(s);
+  let offsetO = 1;
+  let offsetF = 0;
+  for (let i = 0; i < s; i++) {
+    factorNumber[i] = parseInt(factors.value.slice(offsetF, offsetF + 1), 10);
+    offsetF += 1;
+  }
+
+  for (let i = 0; i < s; i++) {
+    let productorial = 1;
+    for (let j = i; j < s; j++) {
+      productorial *= factorNumber[j];
+    }
+    arg +=
+      (parseInt(orders.value.slice(offsetO, offsetO + jump), 10) - 1) /
+      productorial;
+    offsetO += jump;
+  }
+  arg /= 2;
+
+  const delaySec = arg / sweep.value;
+  return (delaySec / acqTime.value) * (nbPoints.value - 1);
+}
+
 export function getMagnitude(param, searchStr) {
   let par = getPar(param, searchStr) || 'NA';
   if (par === 'NA') {

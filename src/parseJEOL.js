@@ -8,6 +8,7 @@ import {
   getArray,
   getUnit,
   getString,
+  getDigitalFilter,
 } from './utils';
 
 /**
@@ -327,7 +328,7 @@ export function parseJEOL(buffer) {
       dataAxisStart: header.dataAxisStart,
       dataAxisStop: header.dataAxisStop,
       resolution: resolution,
-      digitalFilter: getPar(parameters, 'FILTER_FACTOR').value,
+      digitalFilter: getDigitalFilter(parameters), //getPar(parameters, 'FILTER_FACTOR').value,
       decimationRate: getPar(parameters, 'decimation_rate').value,
       paramList: JSON.stringify(parameters.paramArray.map((par) => par.name)),
     },
