@@ -84,14 +84,14 @@ export const prefixTable = {
   '-3': 'Giga',
   '-2': 'Mega',
   '-1': 'Kilo',
-  '0': 'None',
-  '1': 'Milli',
-  '2': 'Micro',
-  '3': 'Nano',
-  '4': 'Pico',
-  '5': 'Femto',
-  '6': 'Atto',
-  '7': 'Zepto',
+  0: 'None',
+  1: 'Milli',
+  2: 'Micro',
+  3: 'Nano',
+  4: 'Pico',
+  5: 'Femto',
+  6: 'Atto',
+  7: 'Zepto',
 };
 
 export const unitPrefixTable = {

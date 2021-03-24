@@ -22,8 +22,10 @@ const buffer = readFileSync('pathToFile');
 let parsed = parseJEOL(buffer);
 console.log(parsed);
 ```
+
 ## Acknowledgements
-the data provided as test examples in this package were found [here](https://dataverse.harvard.edu/dataverse/cenaptnmr) thanks to the research group of Guido Pauli.
+
+The data provided as test examples in this package were found [here](https://dataverse.harvard.edu/dataverse/cenaptnmr) thanks to the research group of Guido Pauli.
 
 ## [API Documentation](https://cheminfo.github.io/jeolconverter/)
 
