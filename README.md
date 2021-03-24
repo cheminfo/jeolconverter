@@ -27,8 +27,6 @@ console.log(parsed);
 
 The data provided as test examples in this package were found [here](https://dataverse.harvard.edu/dataverse/cenaptnmr) thanks to the research group of Guido Pauli.
 
-## [API Documentation](https://cheminfo.github.io/jeolconverter/)
-
 ## License
 
 [MIT](./LICENSE)
