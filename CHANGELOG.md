@@ -1,3 +1,5 @@
+# Changelog
+
 ## [1.0.0](https://github.com/cheminfo/jeolconverter/compare/v0.2.0...v1.0.0) (2021-03-24)
 
 # [0.2.0](https://github.com/cheminfo/jeolconverter/compare/v0.1.6...v0.2.0) (2020-07-08)
